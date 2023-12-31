@@ -55,9 +55,9 @@ class ScanMatcher:
         #self.vis.create_window()
 
         # Visualization variables
-        self.viz = Visualization(10, 10, 0.0, 0.0, dt = 1.0, g=0.8, h=0.8)
+        #self.viz = Visualization(10, 10, 0.0, 0.0, dt = 1.0, g=0.8, h=0.8)
         timer_period = 0.2  # seconds
-        self.update_viz_timer = self.node.create_timer(timer_period, self.update_viz)
+        #self.update_viz_timer = self.node.create_timer(timer_period, self.update_viz)
 
     
     def update_viz(self):
@@ -129,8 +129,8 @@ class ScanMatcher:
         #R = self.odometry[0:3, 0:3]
         #euler = self.rotation_to_euler(R)
 
-        R2 = self.odometry2[0:3, 0:3]
-        euler2 = self.rotation_to_euler(R2)
+        #R2 = self.odometry2[0:3, 0:3]
+        #euler2 = self.rotation_to_euler(R2)
 
         R3 = self.odometry3[0:3, 0:3]
         euler3 = self.rotation_to_euler(R3)
@@ -140,7 +140,7 @@ class ScanMatcher:
 
         # Extract translation vector
         #T = self.odometry[0:3, 3]
-        T2 = self.odometry2[0:3, 3]
+        #T2 = self.odometry2[0:3, 3]
         T3 = self.odometry3[0:3, 3]
 
         _, _, theta = self.euler_from_quaternion(self.odom_msg.pose.pose.orientation)
@@ -162,6 +162,8 @@ class ScanMatcher:
 
             self.pc_odom_msg = Odometry()
             self.pc_odom_msg.header.stamp = self.node.get_clock().now().to_msg()
+            self.pc_odom_msg.header.frame_id = "odom"
+            self.pc_odom_msg.child_frame_id = "base_link"
             self.pc_odom_msg.pose.pose.position.x = x
             self.pc_odom_msg.pose.pose.position.y = y
             self.pc_odom_msg.pose.pose.position.z = z
@@ -171,7 +173,7 @@ class ScanMatcher:
             self.pc_odom_msg.pose.pose.orientation.w = quat_w
 
             self.yaw = yaw
-            #self.publisher_.publish(msg)
+            self.publisher_.publish(self.pc_odom_msg)
         
 
     def pointcloud2_to_pointcloud(self, msg):
